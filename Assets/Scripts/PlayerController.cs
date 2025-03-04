@@ -7,10 +7,17 @@ public class PlayerController : MonoBehaviour
 {
     private Rigidbody playerRb;
     private GameObject focalPoint;
+
     public float speed = 5.0f;
+    public float jumbForce;
+    public float shockwaveForce;
+
     public bool hasPowerup;
     private float powerupStrength = 15.0f;
     public GameObject powerupIndicator;
+    public GameObject bullet;
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -26,6 +33,8 @@ public class PlayerController : MonoBehaviour
         playerRb.AddForce(focalPoint.transform.forward * speed * forwardInput);
 
         powerupIndicator.transform.position = transform.position + new Vector3(0, -0.5f, 0);
+
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -34,13 +43,41 @@ public class PlayerController : MonoBehaviour
         {
             hasPowerup = true;
             powerupIndicator.gameObject.SetActive(true);
+            
+            
+
+            if (other.gameObject.name.Equals("Bullet Powerup"))
+            {
+                StartCoroutine(BulletPowerupRoutine());
+            }
+            else if (other.gameObject.name.Equals("Jump Powerup"))
+            {
+
+            }
+            else if (other.gameObject.name.Equals("Powerup"))
+            {
+                StartCoroutine(PowerupCountdownRoutine());
+            }
             Destroy(other.gameObject);
-            StartCoroutine(PowerupCountdownRoutine());
         }
     }
 
     IEnumerator PowerupCountdownRoutine()
     {
+        yield return new WaitForSeconds(7);
+        hasPowerup = false;
+        powerupIndicator.gameObject.SetActive(false);
+    }
+
+    IEnumerator BulletPowerupRoutine()
+    {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        for (int i = 0; i < enemies.Length; i++)
+        {
+            Vector3 direction = (enemies[i].transform.position - transform.position).normalized;
+            GameObject bullets = Instantiate(bullet, transform.position, enemies[i].transform.rotation);
+            bullets.GetComponent<Rigidbody>().AddForce(direction * 500);
+        }
         yield return new WaitForSeconds(7);
         hasPowerup = false;
         powerupIndicator.gameObject.SetActive(false);

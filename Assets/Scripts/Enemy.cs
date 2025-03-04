@@ -7,7 +7,6 @@ public class Enemy : MonoBehaviour
     public float speed;
     private Rigidbody enemyRb;
     private GameObject player;
-    private float waveNumber;
 
     // Start is called before the first frame update
     void Start()
@@ -19,9 +18,8 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        waveNumber = FindObjectOfType<SpawnManagerX>().waveCount / 10;
         Vector3 lookDirection = (player.transform.position - transform.position).normalized;
-        enemyRb.AddForce(lookDirection * (speed + waveNumber));
+        enemyRb.AddForce(lookDirection * speed);
 
         if (transform.position.y < -10)
         {
