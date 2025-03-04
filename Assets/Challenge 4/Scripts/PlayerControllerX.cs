@@ -33,16 +33,15 @@ public class PlayerControllerX : MonoBehaviour
         // Set powerup indicator position to beneath player
         powerupIndicator.transform.position = transform.position + new Vector3(0, -0.6f, 0);
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space))
         {
             speedBoost = 2;
             smokeParticle.transform.position = transform.position + new Vector3(0, -0.5f, 0);
-            smokeParticle.gameObject.SetActive(true);
+            smokeParticle.Play();
         }
         else
         {
             speedBoost = 1;
-            smokeParticle.gameObject.SetActive(false);
         }
 
     }
@@ -66,6 +65,8 @@ public class PlayerControllerX : MonoBehaviour
         hasPowerup = false;
         powerupIndicator.SetActive(false);
     }
+
+    
 
     // If Player collides with enemy
     private void OnCollisionEnter(Collision other)
