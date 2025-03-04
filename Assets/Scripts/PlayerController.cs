@@ -9,9 +9,6 @@ public class PlayerController : MonoBehaviour
     private GameObject focalPoint;
 
     public float speed = 5.0f;
-    public float jumbForce;
-    public float shockwaveForce;
-
     public bool hasPowerup;
     private float powerupStrength = 15.0f;
     public GameObject powerupIndicator;
@@ -43,21 +40,14 @@ public class PlayerController : MonoBehaviour
         {
             hasPowerup = true;
             powerupIndicator.gameObject.SetActive(true);
-            
-            
+            StartCoroutine(PowerupCountdownRoutine());
+
 
             if (other.gameObject.name.Equals("Bullet Powerup"))
             {
                 StartCoroutine(BulletPowerupRoutine());
             }
-            else if (other.gameObject.name.Equals("Jump Powerup"))
-            {
-
-            }
-            else if (other.gameObject.name.Equals("Powerup"))
-            {
-                StartCoroutine(PowerupCountdownRoutine());
-            }
+            
             Destroy(other.gameObject);
         }
     }
@@ -75,7 +65,7 @@ public class PlayerController : MonoBehaviour
         for (int i = 0; i < enemies.Length; i++)
         {
             Vector3 direction = (enemies[i].transform.position - transform.position).normalized;
-            GameObject bullets = Instantiate(bullet, transform.position, enemies[i].transform.rotation);
+            GameObject bullets = Instantiate(bullet, transform.position + Vector3.up, Quaternion.identity);
             bullets.GetComponent<Rigidbody>().AddForce(direction * 500);
         }
         yield return new WaitForSeconds(7);
